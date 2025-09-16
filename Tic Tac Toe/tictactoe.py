@@ -9,6 +9,7 @@ screen_height=600
 screen= pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("--TIC TAC TOE--")
 White=(255,255,255)
+Black=(0,0,0)
 Red=(255,0,0)
 Green=(0,255,0)
 def grid():
@@ -33,12 +34,82 @@ def draw_symbols():
             x+=1
         y+=1
 
+Winner=0
+gameover=False
+
+def check_winner():
+    global Winner
+    global gameover
+    y=0
+    for i in flags:
+        # To check rows 
+        if sum(i)==3:
+            print("Cross Wins") # Player 1
+            Winner=1
+            gameover=True
+
+        if sum(i)==-3:
+            print("Circle Wins") #Player 2
+            Winner=-1
+            gameover=True
+
+        #To check coloumns
+        if flags[0][y]+ flags[1][y] +flags[2][y] == 3:
+            print("Cross wins")
+            Winner=1
+            gameover=True
+
+        if flags[0][y]+ flags[1][y] +flags[2][y] == -3:
+            print("Circle wins")
+            Winner=-1
+            gameover=True
+        y+=1
+                 
+    #To check diagnals 
+    if flags[0][0]+flags[1][1]+flags[2][2]== 3 or flags[2][0]+ flags[1][1] +flags[0][2] == 3:
+        print('Cross wins')
+        Winner=1
+        gameover=True
+
+    if flags[0][0]+flags[1][1]+flags[2][2]== -3 or flags[2][0]+ flags[1][1] +flags[0][2] == -3:
+            print("Circle wins")
+            Winner=-1
+            gameover=True
+
+    #To check for draw
+    full_cells=0
+    for i in flags:
+        for j in i:
+            if j ==-1 or j==1:
+                full_cells+=1
+    if full_cells==9:
+        gameover=True
+        
+
+font=pygame.font.SysFont(None, 100)
+def Winner_message(Winner):
+    x_m=150
+    y_m=150
+    if Winner==1:
+        win_txt="Cross Wins!"
+    
+    elif Winner==-1:
+        win_txt="Circle Wins!"
+
+    else:
+        win_txt="Draw"
+    win_img= font.render(win_txt, True, White, Black)
+    screen.blit(win_img, (x_m, y_m))
+    
+
+    
 
 flags=np.array([[0,0,0],[0,0,0],[0,0,0]])
 print(flags)
 click=False
 position=[]
 player=1
+
 running=True
 while running:
     grid()
@@ -47,18 +118,23 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running= False
-    if event.type==pygame.MOUSEBUTTONDOWN and click==False:
-        click=True
+        if gameover==False:
+            if event.type==pygame.MOUSEBUTTONDOWN and click==False:
+                click=True
 
-    if event.type==pygame.MOUSEBUTTONUP and click == True:
-        click=False
-        position=pygame.mouse.get_pos()
-        x_position=position[0]
-        y_position=position[1]
-        if flags[y_position//200][x_position//200]==0: #(y,x) to represent the cells correctly in the matrix of numpy in terminal
-            flags[y_position//200][x_position//200]=player
-            player*=-1
-        print(flags)
+            if event.type==pygame.MOUSEBUTTONUP and click == True:
+                click=False
+                position=pygame.mouse.get_pos()
+                x_position=position[0]
+                y_position=position[1]
+                if flags[y_position//200][x_position//200]==0: #(y,x) to represent the cells correctly in the matrix of numpy in terminal
+                    flags[y_position//200][x_position//200]=player
+                    player*=-1
+                print(flags)
+                check_winner()
+
+    if gameover==True:
+        Winner_message(Winner)
 
     
     pygame.display.update()
