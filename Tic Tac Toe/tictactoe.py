@@ -3,11 +3,13 @@ import numpy as np
 from pygame.locals import *
 
 pygame.init()
-
+#screen initialization
 screen_width=600
 screen_height=600
 screen= pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("--TIC TAC TOE--")
+
+#colours
 White=(255,255,255)
 Black=(0,0,0)
 Red=(255,0,0)
@@ -34,9 +36,10 @@ def draw_symbols():
             x+=1
         y+=1
 
+
+
 Winner=0
 gameover=False
-
 def check_winner():
     global Winner
     global gameover
@@ -84,12 +87,19 @@ def check_winner():
                 full_cells+=1
     if full_cells==9:
         gameover=True
-        
 
+#font and playagain button
+Play_again_rect= Rect(295, 395, 250, 50)
 font=pygame.font.SysFont(None, 100)
-def Winner_message(Winner):
-    x_m=150
+def gameover_screen(Winner):
+    pygame.draw.rect(screen, Black, (0, 0, screen_width, screen_height)) #background for gameover screen
+
+
+    # Winner message
+    x_m=100
     y_m=150
+    x_pm=300
+    y_pm=400
     if Winner==1:
         win_txt="Cross Wins!"
     
@@ -98,11 +108,22 @@ def Winner_message(Winner):
 
     else:
         win_txt="Draw"
-    win_img= font.render(win_txt, True, White, Black)
-    screen.blit(win_img, (x_m, y_m))
-    
+        x_m=225
 
-    
+    win_img= font.render(win_txt, True, White, Black)
+    #message background and border
+    pygame.draw.rect(screen, White, (screen_width//2-275, screen_height//2-200,550,150), border_radius=15)
+    pygame.draw.rect(screen, Black, (screen_width//2-270, screen_height//2-195,540,140), border_radius=15)
+    screen.blit(win_img, (x_m, y_m))
+
+    #play again button
+    play_again_txt="Play Again"
+    Play_again_img= pygame.font.SysFont(None,60).render(play_again_txt, True, White)
+    pygame.draw.rect(screen, White, (x_pm-10, y_pm-10,260,60), border_radius=15)
+    pygame.draw.rect(screen, Black, Play_again_rect , border_radius=15)
+    screen.blit(Play_again_img, (x_pm, y_pm))
+
+
 
 flags=np.array([[0,0,0],[0,0,0],[0,0,0]])
 print(flags)
@@ -134,8 +155,22 @@ while running:
                 check_winner()
 
     if gameover==True:
-        Winner_message(Winner)
+        gameover_screen(Winner)
+        #playagain
+        if event.type==pygame.MOUSEBUTTONDOWN and click==False:
+                click=True
 
+        if event.type==pygame.MOUSEBUTTONUP and click == True:
+            click=False
+            position=pygame.mouse.get_pos()
+            if Play_again_rect.collidepoint(position):
+                    #reset varriables
+                    Winner=0
+                    gameover=False
+                    flags=np.array([[0,0,0],[0,0,0],[0,0,0]])
+                    position=[]
+                    player=1
+                    
     
     pygame.display.update()
        
