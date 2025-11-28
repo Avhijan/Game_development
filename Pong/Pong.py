@@ -18,6 +18,7 @@ you_score=0
 fps=60
 winner=0
 live_ball=False
+speed_increase=0
 
 
 #define colors
@@ -106,11 +107,13 @@ while running:
     fpsclock.tick(fps)
 
     Background()
-    show_text('Ai='+str(Ai_score), font, white, 20, 15)
-    show_text('You='+str(you_score),font,white, 450, 15)
+    show_text('Ai:'+str(Ai_score), font, white, 20, 15)
+    show_text('You:'+str(you_score),font,white, 450, 15)
+    show_text('Speed:' + str(abs(pong.speed_x)),font,white,screen_width//2-100,15 )
     if live_ball==True:
         #move ball
         winner=pong.move()
+        speed_increase +=1
         if winner==0:
             #move paddle
             player_paddle.move()
@@ -123,14 +126,23 @@ while running:
                 you_score +=1
             if winner == -1:
                 Ai_score +=1
-            winner=0
-    
+            
 
-
-    
     #draw paddles
     player_paddle.draw()
     Ai_paddle.draw()
+
+    #Tutorial for player
+    if live_ball==False:
+        if winner==0:
+            show_text("Click anywhere to start",font, white, 130, screen_height//2 -100)
+        if winner==1:
+            show_text("Click anywhere to start",font, white, 130, screen_height//2 -100)
+            show_text('You scored!!!',font, white, 190, screen_height//2 -50)
+        if winner==-1:
+            show_text("Click anywhere to start",font, white, 130, screen_height//2 -100)
+            show_text('AI scored :(',font, white, 210, screen_height//2 -50)
+    
    
 
     for event in pygame.event.get():
@@ -139,6 +151,20 @@ while running:
         if event.type==pygame.MOUSEBUTTONDOWN and live_ball==False:
             live_ball=True
             pong.reset(screen_width-60,screen_height//2-50)
+
+    if speed_increase>500:
+        speed_increase=0
+        if pong.speed_x<0:
+            pong.speed_x -=1
+        if pong.speed_x>0:
+            pong.speed_x +=1
+        if pong.speed_y<0:
+            pong.speed_y -=1
+        if pong.speed_y>0:
+            pong.speed_y +=1
+
+
+
 
 
 
