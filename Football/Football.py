@@ -46,7 +46,7 @@ class football:
     def __init__(self,x,y):
         self.x=x
         self.y=y
-        self.ball_radius=30
+        self.ball_radius=20
         self.speed_x = 5
         self.speed_y = 5
         self.rect=Rect(self.x, self.y, 20, 30)
@@ -75,8 +75,28 @@ class football:
         #pygame.draw.polygon(screen, black, [(x1,y1),(x2,y2),(x3,y3),(x4,y4),(x5,y5)])
 
     def move_ball(self):
-        self.rect.x += self.speed_x
-        self.rect.y += self.speed_y
+            
+        #collision detection
+            if self.rect.top < screen_height:
+                self.speed_y *= -1
+
+            if self.rect.bottom > screen_height:
+                self.speed_y *= -1
+
+            if self.rect.right < screen_width:
+                self.speed_x *= -1
+            
+            if self.rect.left > 5:
+                self.speed_x *= -1
+
+
+            #check collision with paddles
+            if self.rect.colliderect(player1) or self.rect.colliderect(player2):
+                self.speed_x *= -1
+
+
+            self.rect.x += self.speed_x
+        #self.rect.y += self.speed_y
         
 
 class player:
@@ -85,12 +105,30 @@ class player:
         self.y=y
         self.player_color=color
         self.rect=Rect(self.x, self.y, 20, 35)
+        self.player_rect = Rect(self.x, self.y, 20, 20)
+        self.player_head = Rect(self.x-3,self.y-26, 28, 28)
+        self.speed=4
 
     def draw_player(self):
         pygame.draw.rect(screen, black, self.rect)
-        pygame.draw.rect(screen,self.player_color , (self.x, self.y, 20, 20))
-        pygame.draw.circle(screen, skin, (self.x+10,self.y-14), 14)
-        pygame.draw.circle(screen, black, (self.x+10,self.y-14), 14, 1)
+        pygame.draw.rect(screen,self.player_color ,self.player_rect)
+        pygame.draw.ellipse(screen, skin, self.player_head, 14)
+        pygame.draw.ellipse(screen, black, self.player_head, 1)
+        # pygame.draw.circle(screen, skin, (self.x+10,self.y-14), 14)
+        # pygame.draw.circle(screen, black, (self.x+10,self.y-14), 14, 1)
+
+    def move_player(self):
+            key = pygame.key.get_pressed()
+            if key[pygame.K_UP] and self.rect.top > 5:
+                self.rect.move_ip(0,-1*self.speed)
+                self.player_rect.move_ip(0,-1*self.speed)
+                self.player_head.move_ip(0, -1*self.speed)
+            
+            if key[pygame.K_DOWN] and self.rect.bottom < screen_height:
+                self.rect.move_ip(0,self.speed)
+                self.player_rect.move_ip(0, self.speed)
+                self.player_head.move_ip(0, self.speed)
+
         
 
 
@@ -107,11 +145,13 @@ while running:
      #draw player
     player1.draw_player()
     player2.draw_player()
+    player1.move_player()
 
     #draw ball
     ball.draw_ball()
     #move football
     ball.move_ball()
+
 
 
 
