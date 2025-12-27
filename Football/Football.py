@@ -129,9 +129,17 @@ class player:
                 self.player_rect.move_ip(0, self.speed)
                 self.player_head.move_ip(0, self.speed)
 
+            if key[pygame.K_RIGHT] and self.rect.right < screen_width:
+                self.rect.move_ip(self.speed, 0)
+                self.player_rect.move_ip(self.speed,0)
+                self.player_head.move_ip(self.speed,0)
+
+            if key[pygame.K_LEFT] and self.rect.left > 0:
+                self.rect.move_ip(-1*self.speed, 0)
+                self.player_rect.move_ip(-1*self.speed,0)
+                self.player_head.move_ip(-1*self.speed,0)
+                
         
-
-
 #player 
 player1 = player(screen_width-900,screen_height//2, blue)
 player2 = player(screen_width-100, screen_height//2, red)
