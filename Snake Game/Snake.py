@@ -19,7 +19,6 @@ font=pygame.font.SysFont(None, 40)
 gameover =False
 clicked=False
 
-
 #snake 
 cell_size=10
 snake_position=[[int(screen_w/2),int(screen_h/2)]]
@@ -39,7 +38,6 @@ yellow=(255,255,0)
 #create window 
 screen= pygame.display.set_mode((screen_w,screen_h))
 pygame.display.set_caption('Snake Game')
-
 
 def draw_screen():
     screen.fill(bg)
@@ -134,9 +132,6 @@ while running:
                 snake_position[0][1]=snake_position[1][1]
                 snake_position[0][0]=snake_position[1][0] - cell_size
             gameover=check_gameover(gameover)
-
-
-
 
     #draw snake
     head=0

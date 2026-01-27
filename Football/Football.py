@@ -1,5 +1,6 @@
 import pygame
 from pygame.locals import *
+import random
 
 pygame.init()
 
@@ -21,6 +22,7 @@ fpsclock=pygame.time.Clock()
 center=((screen_width/2,screen_height/2))
 pi=3.1415
 fps=30
+live_ball=False
 
 def draw_field():
     #for background grass
@@ -50,6 +52,7 @@ class football:
         self.speed_x = 5
         self.speed_y = 5
         self.rect=Rect(self.x, self.y, 20, 30)
+        self.winner=0
 
     def draw_ball(self):
         pygame.draw.circle(screen, white, (self.rect.x, self.rect.y), self.ball_radius)
@@ -75,7 +78,7 @@ class football:
         #pygame.draw.polygon(screen, black, [(x1,y1),(x2,y2),(x3,y3),(x4,y4),(x5,y5)])
 
     def move_ball(self):
-            
+        if live_ball == True:
         #collision detection
             if self.rect.top < screen_height:
                 self.speed_y *= -1
@@ -90,20 +93,31 @@ class football:
                 self.speed_x *= -1
 
 
-            #check collision with paddles
+            #check collision with players
             if self.rect.colliderect(player1) or self.rect.colliderect(player2):
                 self.speed_x *= -1
+                
 
 
             self.rect.x += self.speed_x
         #self.rect.y += self.speed_y
+
+            #check winner
+            if self.rect.left < 5:
+                self.winner = -1
+
+            if self.rect.right > 595:
+                self.winner  =1
+
+            return self.winner
         
 
 class player:
-    def __init__(self,x,y,color):
+    def __init__(self,x,y,color,playernum):
         self.x=x
         self.y=y
         self.player_color=color
+        self.num=playernum
         self.rect=Rect(self.x, self.y, 20, 35)
         self.player_rect = Rect(self.x, self.y, 20, 20)
         self.player_head = Rect(self.x-3,self.y-26, 28, 28)
@@ -118,7 +132,29 @@ class player:
         # pygame.draw.circle(screen, black, (self.x+10,self.y-14), 14, 1)
 
     def move_player(self):
-            key = pygame.key.get_pressed()
+        key = pygame.key.get_pressed()
+        if self.num == 1:
+            if key[pygame.K_w] and self.rect.top > 5:
+                self.rect.move_ip(0,-1*self.speed)
+                self.player_rect.move_ip(0,-1*self.speed)
+                self.player_head.move_ip(0, -1*self.speed)
+            
+            if key[pygame.K_s] and self.rect.bottom < screen_height:
+                self.rect.move_ip(0,self.speed)
+                self.player_rect.move_ip(0, self.speed)
+                self.player_head.move_ip(0, self.speed)
+
+            if key[pygame.K_d] and self.rect.right < screen_width:
+                self.rect.move_ip(self.speed, 0)
+                self.player_rect.move_ip(self.speed,0)
+                self.player_head.move_ip(self.speed,0)
+
+            if key[pygame.K_a] and self.rect.left > 0:
+                self.rect.move_ip(-1*self.speed, 0)
+                self.player_rect.move_ip(-1*self.speed,0)
+                self.player_head.move_ip(-1*self.speed,0)
+
+        if self.num ==2:
             if key[pygame.K_UP] and self.rect.top > 5:
                 self.rect.move_ip(0,-1*self.speed)
                 self.player_rect.move_ip(0,-1*self.speed)
@@ -138,11 +174,10 @@ class player:
                 self.rect.move_ip(-1*self.speed, 0)
                 self.player_rect.move_ip(-1*self.speed,0)
                 self.player_head.move_ip(-1*self.speed,0)
-                
         
 #player 
-player1 = player(screen_width-900,screen_height//2, blue)
-player2 = player(screen_width-100, screen_height//2, red)
+player1 = player(screen_width-900,screen_height//2, blue, 1)
+player2 = player(screen_width-100, screen_height//2, red, 2)
 ball = football(screen_width//2, screen_height//2)
 
 
@@ -154,14 +189,13 @@ while running:
     player1.draw_player()
     player2.draw_player()
     player1.move_player()
+    player2.move_player()
 
     #draw ball
     ball.draw_ball()
     #move football
-    ball.move_ball()
-
-
-
+    winner=ball.move_ball()
+    print(winner)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

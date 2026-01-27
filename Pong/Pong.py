@@ -99,6 +99,7 @@ class ball():
 #paddle
 player_paddle=paddle(screen_width-40, screen_height//2)
 Ai_paddle=paddle(20,screen_height//2)
+
 #pong ball
 pong=ball(screen_width-60,screen_height//2-50)
 
@@ -143,12 +144,11 @@ while running:
             show_text("Click anywhere to start",font, white, 130, screen_height//2 -100)
             show_text('AI scored :(',font, white, 210, screen_height//2 -50)
     
-   
-
     for event in pygame.event.get():
-        if event.type==pygame.QUIT:
+        if event.type == pygame.QUIT:
             running=False
-        if event.type==pygame.MOUSEBUTTONDOWN and live_ball==False:
+
+        if event.type == pygame.MOUSEBUTTONDOWN and live_ball==False:
             live_ball=True
             pong.reset(screen_width-60,screen_height//2-50)
 
@@ -162,11 +162,6 @@ while running:
             pong.speed_y -=1
         if pong.speed_y>0:
             pong.speed_y +=1
-
-
-
-
-
 
     pygame.display.update()
 pygame.quit()
