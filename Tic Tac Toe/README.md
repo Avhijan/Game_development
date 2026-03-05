@@ -3,6 +3,10 @@
 A classic two-player Tic Tac Toe game built with **Python**, using **Pygame** for the graphical interface and **NumPy** to manage and display the game board state in the terminal.
 
 ---
+### View the code:
+Game source code: tictactoe.py
+
+---
 
 
 ### Game Grid
@@ -67,34 +71,11 @@ The `check_winner()` function evaluates the board after every move by summing va
 
 ---
 
-## Project Structure
-
-```
-tic_tac_toe/
-│
-├── tic_tac_toe.py       # Main game file
-├── README.md            # This file
-└── images/              # Screenshots folder
-    ├── game_grid.png
-    ├── win_screen.png
-    └── draw_screen.png
-```
-
----
-
 ## Requirements
 
 - Python 3.x
 - [Pygame](https://www.pygame.org/) — `pip install pygame`
 - [NumPy](https://numpy.org/) — `pip install numpy`
-
----
-
-## ▶Running the Game
-
-```bash
-python tic_tac_toe.py
-```
 
 ---
 
