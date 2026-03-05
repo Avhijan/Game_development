@@ -4,7 +4,7 @@ A classic two-player Tic Tac Toe game built with **Python**, using **Pygame** fo
 
 ---
 ### View the code:
-Game source code: tictactoe.py
+[Source Code](./tictactoe.py)
 
 ---
 
