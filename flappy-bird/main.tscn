@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://bhjufbmjrttwt"]
+
+[ext_resource type="Texture2D" uid="uid://cj36tcr4bq1ah" path="res://assets/bg.png" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://clxxpbr3lgash" path="res://birb.tscn" id="2_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://bwddum2ax82n8" path="res://pipe.tscn" id="2_lquwl"]
+[ext_resource type="Script" uid="uid://bp0cdek3fkj37" path="res://main.gd" id="3_h2yge"]
+[ext_resource type="PackedScene" uid="uid://celbl0a6lys4x" path="res://Ground.tscn" id="4_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://bwy3ldfqh23hl" path="res://game_over.tscn" id="6_7mycd"]
+
+[node name="Main" type="Node" unique_id=1304137251]
+script = ExtResource("3_h2yge")
+pipe_scene = ExtResource("2_lquwl")
+
+[node name="Backgroud" type="Sprite2D" parent="." unique_id=304209520]
+texture = ExtResource("1_ig7tw")
+offset = Vector2(432, 384)
+
+[node name="Birb" parent="." unique_id=910063965 instance=ExtResource("2_0xm2m")]
+
+[node name="Ground" parent="." unique_id=1733792459 instance=ExtResource("4_1bvp3")]
+z_index = 1
+
+[node name="PipeTimer" type="Timer" parent="." unique_id=1614553815]
+wait_time = 1.5
+
+[node name="ScoreLabel" type="Label" parent="." unique_id=24357142]
+z_index = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -32.5
+offset_right = 32.5
+offset_bottom = 23.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 40
+text = "Score : 0"
+
+[node name="GameOver" parent="." unique_id=1937249641 instance=ExtResource("6_7mycd")]
+
+[connection signal="hit" from="Ground" to="." method="_on_ground_hit"]
+[connection signal="timeout" from="PipeTimer" to="." method="_on_pipe_timer_timeout"]
+[connection signal="restart" from="GameOver" to="." method="_on_game_over_restart"]
